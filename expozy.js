@@ -3,11 +3,11 @@ class ExpozyElement extends HTMLElement {
         super();
         const shadow = this.attachShadow({ mode: 'closed' });
 
-        // Динамично извличане на базовия URL на сайта
-        const baseUrl = window.location.origin;
-
-        // Извличане на параметъра 'p' само от URL на скрипта
+        // Взимаме базовия URL динамично от `scriptSrc`
         const scriptSrc = document.currentScript.src;
+        const baseUrl = new URL(scriptSrc).origin;
+
+        // Извличане на параметъра 'p' от URL на скрипта
         const urlParams = new URL(scriptSrc).searchParams;
         const projectName = urlParams.get('p');
 
