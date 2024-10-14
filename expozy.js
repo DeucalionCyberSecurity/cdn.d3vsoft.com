@@ -20,24 +20,36 @@ class ExpozyElement extends HTMLElement {
                 const wrapper = document.createElement('div');
 
                 // Вгражда CSS файловете от css.json
-                cssFiles.forEach(cssFile => {
-                    const link = document.createElement('link');
-                    link.rel = 'stylesheet';
-                    link.href = `${baseUrl}/${projectName}/css/${cssFile}`;
-                    wrapper.appendChild(link);
+                const cssPromises = cssFiles.map(cssFile => {
+                    return new Promise((resolve, reject) => {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = `${baseUrl}/${projectName}/css/${cssFile}`;
+                        link.onload = resolve;
+                        link.onerror = reject;
+                        shadow.appendChild(link);
+                    });
                 });
 
                 // Вгражда JS файловете от js.json
-                jsFiles.forEach(jsFile => {
-                    const script = document.createElement('script');
-                    script.src = `${baseUrl}/${projectName}/js/${jsFile}`;
-                    script.defer = true;
-                    wrapper.appendChild(script);
+                const jsPromises = jsFiles.map(jsFile => {
+                    return new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = `${baseUrl}/${projectName}/js/${jsFile}`;
+                        script.defer = true;
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        shadow.appendChild(script);
+                    });
                 });
 
-                shadow.appendChild(wrapper);
+                // Изчакване на CSS и JS да се заредят
+                return Promise.all([...cssPromises, ...jsPromises]);
+            }).then(() => {
+                // Всичко е заредено успешно
+                console.log('Всички стилове и скриптове са заредени.');
             }).catch(error => {
-                console.error('Грешка при зареждане на JSON файловете:', error);
+                console.error('Грешка при зареждане на файловете:', error);
             });
         } else {
             console.warn("Не е зададен проектен параметър 'p' в URL адреса на скрипта.");
