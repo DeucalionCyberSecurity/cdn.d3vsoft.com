@@ -3,8 +3,9 @@ class ExpozyElement extends HTMLElement {
         super();
         const shadow = this.attachShadow({ mode: 'closed' });
 
-        // Проверява URL за параметъра ?p=име_на_проект
-        const urlParams = new URLSearchParams(window.location.search);
+        // Извличане на параметъра 'p' само от URL на скрипта
+        const scriptSrc = document.currentScript.src;
+        const urlParams = new URL(scriptSrc).searchParams;
         const projectName = urlParams.get('p');
 
         if (projectName) {
@@ -36,7 +37,7 @@ class ExpozyElement extends HTMLElement {
                 console.error('Грешка при зареждане на JSON файловете:', error);
             });
         } else {
-            console.warn("Не е зададен проектен параметър 'p' в URL адреса.");
+            console.warn("Не е зададен проектен параметър 'p' в URL адреса на скрипта.");
         }
     }
 }
