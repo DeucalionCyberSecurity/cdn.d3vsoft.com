@@ -1,4 +1,4 @@
-class Expozy extends HTMLElement {
+class ExpozyElement extends HTMLElement {
     constructor() {
         super();
         const shadow = this.attachShadow({ mode: 'closed' });
@@ -10,8 +10,8 @@ class Expozy extends HTMLElement {
         if (projectName) {
             // Зарежда js.json и css.json от съответната папка
             Promise.all([
-                fetch(`${projectName}/js.json`).then(response => response.json()),
-                fetch(`${projectName}/css.json`).then(response => response.json())
+                fetch(`/${projectName}/js.json`).then(response => response.json()),
+                fetch(`/${projectName}/css.json`).then(response => response.json())
             ]).then(([jsFiles, cssFiles]) => {
                 const wrapper = document.createElement('div');
 
@@ -41,5 +41,5 @@ class Expozy extends HTMLElement {
     }
 }
 
-// Регистриране на Web Component-а като expozy
-customElements.define('expozy', Expozy);
+// Регистриране на Web Component-а като expozy-element
+customElements.define('expozy-element', ExpozyElement);
