@@ -23,14 +23,14 @@ class ExpozyElement extends HTMLElement {
                 cssFiles.forEach(cssFile => {
                     const link = document.createElement('link');
                     link.rel = 'stylesheet';
-                    link.href = `${baseUrl}/${cssFile}`;
+                    link.href = `${baseUrl}/${projectName}/css/${cssFile}`;
                     wrapper.appendChild(link);
                 });
 
                 // Вгражда JS файловете от js.json
                 jsFiles.forEach(jsFile => {
                     const script = document.createElement('script');
-                    script.src = `${baseUrl}/${jsFile}`;
+                    script.src = `${baseUrl}/${projectName}/js/${jsFile}`;
                     script.defer = true;
                     wrapper.appendChild(script);
                 });

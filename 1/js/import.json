@@ -1,5 +1,5 @@
 [
-    "./imagesloaded.pkgd.min.js",
-    "./isotope.pkgd.min.js",
-    "./script.js"
+    "imagesloaded.pkgd.min.js",
+    "isotope.pkgd.min.js",
+    "script.js"
 ]
