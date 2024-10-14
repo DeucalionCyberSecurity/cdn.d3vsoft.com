@@ -1,7 +1,6 @@
 class ExpozyElement extends HTMLElement {
     constructor() {
         super();
-        const shadow = this.attachShadow({ mode: 'closed' });
 
         // Взимаме базовия URL динамично от `scriptSrc`
         const scriptSrc = document.currentScript.src;
@@ -12,42 +11,23 @@ class ExpozyElement extends HTMLElement {
         const projectName = urlParams.get('p');
 
         if (projectName) {
-            // Зарежда js.json и css.json от съответната папка
             Promise.all([
                 fetch(`${baseUrl}/${projectName}/js/import.json`).then(response => response.json()),
                 fetch(`${baseUrl}/${projectName}/css/import.json`).then(response => response.json())
             ]).then(([jsFiles, cssFiles]) => {
-                const wrapper = document.createElement('div');
-
-                // Вгражда CSS файловете от css.json
-                const cssPromises = cssFiles.map(cssFile => {
-                    return new Promise((resolve, reject) => {
-                        const link = document.createElement('link');
-                        link.rel = 'stylesheet';
-                        link.href = `${baseUrl}/${projectName}/css/${cssFile}`;
-                        link.onload = resolve;
-                        link.onerror = reject;
-                        shadow.appendChild(link);
-                    });
+                cssFiles.forEach(cssFile => {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = `${baseUrl}/${projectName}/css/${cssFile}`;
+                    document.head.appendChild(link); // Добавяме в <head>, за да влияе на глобалните стилове
                 });
 
-                // Вгражда JS файловете от js.json
-                const jsPromises = jsFiles.map(jsFile => {
-                    return new Promise((resolve, reject) => {
-                        const script = document.createElement('script');
-                        script.src = `${baseUrl}/${projectName}/js/${jsFile}`;
-                        script.defer = true;
-                        script.onload = resolve;
-                        script.onerror = reject;
-                        shadow.appendChild(script);
-                    });
+                jsFiles.forEach(jsFile => {
+                    const script = document.createElement('script');
+                    script.src = `${baseUrl}/${projectName}/js/${jsFile}`;
+                    script.defer = true;
+                    document.body.appendChild(script); // Добавяме скриптовете в <body>
                 });
-
-                // Изчакване на CSS и JS да се заредят
-                return Promise.all([...cssPromises, ...jsPromises]);
-            }).then(() => {
-                // Всичко е заредено успешно
-                console.log('Всички стилове и скриптове са заредени.');
             }).catch(error => {
                 console.error('Грешка при зареждане на файловете:', error);
             });
