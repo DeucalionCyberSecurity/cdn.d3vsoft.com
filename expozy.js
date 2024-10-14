@@ -14,8 +14,8 @@ class ExpozyElement extends HTMLElement {
         if (projectName) {
             // Зарежда js.json и css.json от съответната папка
             Promise.all([
-                fetch(`${baseUrl}/${projectName}/js.json`).then(response => response.json()),
-                fetch(`${baseUrl}/${projectName}/css.json`).then(response => response.json())
+                fetch(`${baseUrl}/${projectName}/js/import.json`).then(response => response.json()),
+                fetch(`${baseUrl}/${projectName}/css/import.json`).then(response => response.json())
             ]).then(([jsFiles, cssFiles]) => {
                 const wrapper = document.createElement('div');
 
