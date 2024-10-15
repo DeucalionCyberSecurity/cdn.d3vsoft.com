@@ -10,15 +10,6 @@ class ExpozyElement extends HTMLElement {
         const urlParams = new URL(scriptSrc).searchParams;
         const projectName = urlParams.get('p');
 
-        // Създаване на стил за бял фон
-        const loadingStyle = document.createElement('style');
-        loadingStyle.innerHTML = `
-            body {
-                visibility: hidden!important; /* Скрива съдържанието, докато не се заредят файловете */
-            }
-        `;
-        document.head.appendChild(loadingStyle);
-
         if (projectName) {
             Promise.all([
                 fetch(`${baseUrl}/${projectName}/js/import.json`).then(response => response.json()),
@@ -28,28 +19,20 @@ class ExpozyElement extends HTMLElement {
                     const link = document.createElement('link');
                     link.rel = 'stylesheet';
                     link.href = `${baseUrl}/${projectName}/css/${cssFile}`;
-                    document.head.appendChild(link);
+                    document.head.appendChild(link); // Добавяме в <head>, за да влияе на глобалните стилове
                 });
 
                 jsFiles.forEach(jsFile => {
                     const script = document.createElement('script');
                     script.src = `${baseUrl}/${projectName}/js/${jsFile}`;
                     script.defer = true;
-                    document.body.appendChild(script);
+                    document.body.appendChild(script); // Добавяме скриптовете в <body>
                 });
-
-                // Премахване на временния стил след зареждане на файловете
-                loadingStyle.remove();
-                document.body.style.visibility = 'visible';
             }).catch(error => {
                 console.error('Грешка при зареждане на файловете:', error);
-                loadingStyle.remove();
-                document.body.style.visibility = 'visible';
             });
         } else {
             console.warn("Не е зададен проектен параметър 'p' в URL адреса на скрипта.");
-            loadingStyle.remove();
-            document.body.style.visibility = 'visible';
         }
     }
 }
