@@ -29,10 +29,10 @@ class ExpozyElement extends HTMLElement {
                     document.body.appendChild(script); // Добавяме скриптовете в <body>
                 });
             }).catch(error => {
-                console.error('Грешка при зареждане на файловете:', error);
+                // console.error('Грешка при зареждане на файловете:', error);
             });
         } else {
-            console.warn("Не е зададен проектен параметър 'p' в URL адреса на скрипта.");
+            // console.warn("Не е зададен проектен параметър 'p' в URL адреса на скрипта.");
         }
     }
 }
